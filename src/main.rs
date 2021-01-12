@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate lazy_static;
+extern crate serde_json;
 
 use actix_web::{App, HttpResponse, HttpServer, middleware, web};
 
@@ -38,7 +39,9 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(middleware::Logger::default())
             .route("/", web::get().to(|| {
-                HttpResponse::Ok().json(select())
+                let selection = select();
+                println!("{:?}", serde_json::to_string(&selection));
+                HttpResponse::Ok().json(selection)
             }))
     })
     .bind("127.0.0.1:50001")?
