@@ -39,9 +39,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(middleware::Logger::default())
             .route("/", web::get().to(|| {
-                let selection = select();
-                println!("{:?}", serde_json::to_string(&selection));
-                HttpResponse::Ok().json(selection)
+                HttpResponse::Ok().json(select())
             }))
     })
     .bind("127.0.0.1:50001")?
@@ -50,6 +48,16 @@ async fn main() -> std::io::Result<()> {
 }
 
 fn select() -> Vec<&'static ProxyServer> {
-    let min = PROXIES.iter().map(|x| x.rating.lock().unwrap().get()).min().unwrap_or(0);
-    PROXIES.iter().filter(|x| x.rating.lock().unwrap().get() - min <= 200).collect::<Vec<_>>()
+    let min = PROXIES.iter()
+        .map(|x| x.get_latency())
+        .min()
+        .unwrap_or(0);
+
+    let selection = PROXIES.iter()
+        .filter(|x| x.get_latency() - min <= 200)
+        .collect::<Vec<_>>();
+
+    println!("{:?}", serde_json::to_string(&selection).unwrap());
+
+    selection
 }

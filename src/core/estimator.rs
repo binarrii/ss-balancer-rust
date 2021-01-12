@@ -65,7 +65,7 @@ impl<'a> Estimator<'a>
         let x = u128::try_from(ROUNDS * TEST_URIS.len()).unwrap();
         let y = total / x;
 
-        let rating_guard = self.proxy_server.rating.lock().unwrap();
-        rating_guard.set((rating_guard.get() * 3 + y * 7) / 10)
+        let rating = self.proxy_server.latency_guard();
+        rating.set((rating.get() * 3 + y * 7) / 10)
     }
 }
