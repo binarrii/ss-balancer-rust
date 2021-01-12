@@ -7,8 +7,10 @@ pub mod estimator;
 
 #[derive(Serialize)]
 pub struct ProxyServer {
+    #[serde(skip_serializing)]
     pub scheme: &'static str,
     pub name: &'static str,
+    #[serde(skip_serializing)]
     pub host: &'static str,
     pub port: i32,
     pub latency: Mutex<Cell<u128>>,
