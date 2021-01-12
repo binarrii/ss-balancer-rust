@@ -1,5 +1,4 @@
 use std::convert::TryFrom;
-use std::ops::Deref;
 use std::thread;
 use std::time::{Duration, Instant};
 
@@ -10,7 +9,7 @@ use crate::core::ProxyServer;
 const TEST_URIS: [&str; 3] = [
     "https://www.google.com",
     "https://www.twitter.com",
-    "https://www.instagram.com"
+    "https://www.instagram.com",
 ];
 
 const ROUNDS: usize = 5;
@@ -32,13 +31,14 @@ impl<'a> Estimator<'a>
     }
 
     fn estimate(self) {
-        let proxy = reqwest::Proxy::http(&self.proxy_server.format())
+        let proxy = reqwest::Proxy::all(&self.proxy_server.format())
             .expect("Invalid proxy server");
 
         let client = reqwest::blocking::Client::builder()
-            .proxy(proxy.clone())
+            .proxy(proxy)
             .connect_timeout(Duration::from_secs(2))
             .timeout(Duration::from_secs(5))
+            .danger_accept_invalid_certs(true)
             .build()
             .expect("Can't build a http client");
 
@@ -47,7 +47,7 @@ impl<'a> Estimator<'a>
         for _ in 1..ROUNDS {
             for uri in TEST_URIS.iter() {
                 let now = Instant::now();
-                let result = client.head(uri.deref()).send();
+                let result = client.head(*uri).send();
                 let elapsed = match result {
                     Ok(_) => now.elapsed().as_millis(),
                     Err(e) => {
