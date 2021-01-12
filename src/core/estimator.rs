@@ -50,10 +50,7 @@ impl<'a> Estimator<'a>
                 let result = client.head(*uri).send();
                 let elapsed = match result {
                     Ok(_) => now.elapsed().as_millis(),
-                    Err(e) => {
-                        println!("{:?}", e);
-                        10000
-                    }
+                    Err(_) => 10000,
                 };
                 total = total + elapsed;
             }
