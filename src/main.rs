@@ -12,14 +12,14 @@ lazy_static! {
     static ref PROXIES: Vec<ProxyServer> = vec![
         ProxyServer {
             name: "hongk.binarii.me",
-            host: "binarii.cc",
-            port: 3325,
+            host: "127.0.0.1",
+            port: 40001,
             ..Default::default()
         },
         ProxyServer {
             name: "tokyo.binarii.me",
-            host: "binarii.cc",
-            port: 3325,
+            host: "127.0.0.1",
+            port: 40002,
             ..Default::default()
         },
     ];
