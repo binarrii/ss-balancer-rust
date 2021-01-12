@@ -57,7 +57,7 @@ fn select() -> Vec<&'static ProxyServer> {
         .filter(|x| x.get_latency() - min <= 200)
         .collect::<Vec<_>>();
 
-    println!("{:?}", serde_json::to_string(&selection).unwrap());
+    println!("{}", serde_json::to_string(&selection).unwrap());
 
     selection
 }
