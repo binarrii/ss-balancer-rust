@@ -1,3 +1,3 @@
-# jr-license-server
+# ss-balancer-rust
 
-https://github.com/SakaDream/actix-web-rest-api-with-jwt.git
+https://github.com/binarri/ss-balancer-rust.git
