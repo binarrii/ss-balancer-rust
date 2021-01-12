@@ -7,11 +7,10 @@ use rand::Rng;
 
 use crate::core::ProxyServer;
 
-const TEST_URIS: [&str; 1] = [
-    // "https://www.google.com",
-    "https://www.baidu.com",
-    // "https://www.twitter.com",
-    // "https://www.instagram.com"
+const TEST_URIS: [&str; 3] = [
+    "https://www.google.com",
+    "https://www.twitter.com",
+    "https://www.instagram.com"
 ];
 
 const ROUNDS: usize = 5;

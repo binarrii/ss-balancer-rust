@@ -6,7 +6,6 @@ use actix_web::{App, HttpResponse, HttpServer, middleware, web};
 use crate::core::estimator::Estimator;
 use crate::core::ProxyServer;
 
-
 mod core;
 
 lazy_static! {
@@ -38,7 +37,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
-            .route("/", web::get().to( || {
+            .route("/", web::get().to(|| {
                 HttpResponse::Ok().json(select())
             }))
     })
