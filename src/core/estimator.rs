@@ -24,7 +24,11 @@ impl<'a> Estimator<'a>
     where 'a: 'static
 {
     pub fn start(self) {
-        thread::spawn(move || loop { self.clone().estimate(); });
+        thread::spawn(move || loop {
+            self.clone().estimate();
+            let secs = rand::thread_rng().gen_range(5..30);
+            thread::sleep(Duration::from_secs(secs));
+        });
     }
 
     fn estimate(self) {
@@ -34,15 +38,13 @@ impl<'a> Estimator<'a>
         let client = reqwest::blocking::Client::builder()
             .proxy(proxy.clone())
             .connect_timeout(Duration::from_secs(2))
-            .timeout(Duration::from_secs(10))
+            .timeout(Duration::from_secs(5))
             .build()
             .expect("Can't build a http client");
 
         let mut total: u128 = 0;
-        for _ in 1..ROUNDS {
-            let secs = rand::thread_rng().gen_range(10..30);
-            thread::sleep(Duration::from_secs(secs));
 
+        for _ in 1..ROUNDS {
             for uri in TEST_URIS.iter() {
                 let now = Instant::now();
                 let result = client.head(uri.deref()).send();
@@ -52,7 +54,11 @@ impl<'a> Estimator<'a>
                 };
                 total = total + elapsed;
             }
+
+            let millis = rand::thread_rng().gen_range(100..901);
+            thread::sleep(Duration::from_millis(millis));
         }
+
         let x = u128::try_from(ROUNDS * TEST_URIS.len()).unwrap();
         let y = total / x;
 
