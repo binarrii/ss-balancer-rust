@@ -1,17 +1,19 @@
 use std::cell::Cell;
 use std::sync::{Mutex, MutexGuard};
 
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 pub mod estimator;
+pub mod config;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct ProxyServer {
     #[serde(skip_serializing)]
-    pub scheme: &'static str,
-    pub name: &'static str,
-    pub host: &'static str,
+    pub scheme: String,
+    pub name: String,
+    pub host: String,
     pub port: i32,
+    #[serde(skip_deserializing)]
     pub latency: Mutex<Cell<u128>>,
 }
 
@@ -34,9 +36,9 @@ impl ProxyServer {
 impl Default for ProxyServer {
     fn default() -> Self {
         ProxyServer {
-            scheme: "socks5h",
-            name: "localhost",
-            host: "127.0.0.1",
+            scheme: String::from("socks5h"),
+            name: String::from("localhost"),
+            host: String::from("127.0.0.1"),
             port: 1080,
             latency: Mutex::new(Cell::new(0)),
         }
@@ -46,10 +48,10 @@ impl Default for ProxyServer {
 impl Clone for ProxyServer {
     fn clone(&self) -> Self {
         ProxyServer {
-            scheme: self.scheme,
-            name: self.name,
-            host: self.host,
-            port: self.port,
+            scheme: self.scheme.clone(),
+            name: self.name.clone(),
+            host: self.host.clone(),
+            port: self.port.clone(),
             ..Default::default()
         }
     }

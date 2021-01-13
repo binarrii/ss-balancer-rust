@@ -1,0 +1,22 @@
+{
+  "proxies": [
+    {
+      "scheme": "socks5h",
+      "name": "hongk.binarii.me",
+      "host": "127.0.0.1",
+      "port": 40001
+    },
+    {
+      "scheme": "socks5h",
+      "name": "tokyo.binarii.me",
+      "host": "127.0.0.1",
+      "port": 40002
+    }
+  ],
+  "testUris": [
+    "https://www.google.com",
+    "https://www.twitter.com",
+    "https://www.instagram.com",
+    "https://www.youtube.com"
+  ]
+}

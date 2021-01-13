@@ -1,16 +1,10 @@
-use std::convert::TryFrom;
 use std::thread;
 use std::time::{Duration, Instant};
 
 use rand::Rng;
 
+use crate::CONFIG;
 use crate::core::ProxyServer;
-
-const TEST_URIS: [&str; 3] = [
-    "https://www.google.com",
-    "https://www.twitter.com",
-    "https://www.instagram.com",
-];
 
 const ROUNDS: usize = 5;
 
@@ -45,9 +39,9 @@ impl<'a> Estimator<'a>
         let mut total: u128 = 0;
 
         for _ in 1..ROUNDS {
-            for uri in TEST_URIS.iter() {
+            for uri in CONFIG.test_uris.iter() {
                 let now = Instant::now();
-                let result = client.head(*uri).send();
+                let result = client.head(uri).send();
                 let elapsed = match result {
                     Ok(_) => now.elapsed().as_millis(),
                     Err(_) => 10000,
@@ -59,10 +53,9 @@ impl<'a> Estimator<'a>
             thread::sleep(Duration::from_millis(millis));
         }
 
-        let x = u128::try_from(ROUNDS * TEST_URIS.len()).unwrap();
-        let y = total / x;
+        let x = total / ((ROUNDS * CONFIG.test_uris.len()) as u128);
 
-        let rating = self.proxy_server.latency_guard();
-        rating.set((rating.get() * 3 + y * 7) / 10)
+        let latency = self.proxy_server.latency_guard();
+        latency.set((latency.get() * 3 + x * 7) / 10)
     }
 }
