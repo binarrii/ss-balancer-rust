@@ -39,7 +39,7 @@ async fn main() -> std::io::Result<()> {
                 HttpResponse::Ok().json(select())
             }))
     })
-    .bind("127.0.0.1:50001")?
+    .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
     .run()
     .await
 }
@@ -58,8 +58,8 @@ fn select() -> Vec<&'static ProxyServer> {
     let a = serde_json::to_string(&CONFIG.proxies).unwrap();
     let s = serde_json::to_string(&selection).unwrap();
 
-    println!("{} SVR >> {}\n", i, a);
-    println!("{} SLC << {}\n\n", i, s);
+    println!("{} SVR >> {}", i, a);
+    println!("{} SLC << {}\n", i, s);
 
     selection
 }

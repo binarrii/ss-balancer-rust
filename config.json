@@ -1,4 +1,6 @@
 {
+  "address": "127.0.0.1",
+  "port": 50001,
   "proxies": [
     {
       "scheme": "socks5h",
