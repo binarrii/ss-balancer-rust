@@ -55,11 +55,9 @@ fn select() -> Vec<&'static ProxyServer> {
         .collect::<Vec<_>>();
 
     let i = COUNTER.fetch_add(1, Ordering::SeqCst);
-    let a = serde_json::to_string(&CONFIG.proxies).unwrap();
     let s = serde_json::to_string(&selection).unwrap();
 
-    println!("{} SVR >> {}", i, a);
-    println!("{} SLC << {}\n", i, s);
+    println!("{} SVR >> {}", i, s);
 
     selection
 }
