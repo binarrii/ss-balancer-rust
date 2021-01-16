@@ -20,5 +20,6 @@
     "https://www.twitter.com",
     "https://www.instagram.com",
     "https://www.youtube.com"
-  ]
+  ],
+  "tolerance": 200
 }

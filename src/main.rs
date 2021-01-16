@@ -51,7 +51,7 @@ fn select() -> Vec<&'static ProxyServer> {
         .unwrap_or(0);
 
     let selection = CONFIG.proxies.iter()
-        .filter(|x| x.get_latency() - min <= 200)
+        .filter(|x| x.get_latency() - min <= CONFIG.tolerance.unwrap_or(200))
         .collect::<Vec<_>>();
 
     let i = COUNTER.fetch_add(1, Ordering::SeqCst);
