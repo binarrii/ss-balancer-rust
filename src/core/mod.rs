@@ -1,4 +1,3 @@
-use std::cell::Cell;
 use std::sync::Mutex;
 
 use serde::{Deserialize, Serialize};
@@ -14,7 +13,7 @@ pub struct ProxyServer {
     pub host: String,
     pub port: i32,
     #[serde(skip_deserializing)]
-    pub latency: Mutex<Cell<u128>>,
+    pub latency: Mutex<u128>,
 }
 
 impl ProxyServer {
@@ -23,11 +22,11 @@ impl ProxyServer {
     }
 
     pub fn get_latency(&self) -> u128 {
-        self.latency.lock().unwrap().get()
+        *self.latency.lock().unwrap()
     }
 
     pub fn set_latency(&self, value: u128) {
-        self.latency.lock().unwrap().set(value)
+        *self.latency.lock().unwrap() = value
     }
 }
 
@@ -38,7 +37,7 @@ impl Default for ProxyServer {
             name: String::from("localhost"),
             host: String::from("127.0.0.1"),
             port: 1080,
-            latency: Mutex::new(Cell::new(0)),
+            latency: Mutex::new(0),
         }
     }
 }
