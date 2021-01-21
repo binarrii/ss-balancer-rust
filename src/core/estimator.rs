@@ -19,7 +19,7 @@ impl<'a> Estimator<'a>
     pub fn start(self) {
         thread::spawn(move || loop {
             self.clone().estimate();
-            let secs = rand::thread_rng().gen_range(5..30);
+            let secs = rand::thread_rng().gen_range(5..=30);
             thread::sleep(Duration::from_secs(secs));
         });
     }
@@ -33,6 +33,7 @@ impl<'a> Estimator<'a>
             .connect_timeout(Duration::from_secs(2))
             .timeout(Duration::from_secs(5))
             .danger_accept_invalid_certs(true)
+            .redirect(reqwest::redirect::Policy::limited(5))
             .build()
             .expect("Can't build a http client");
 
@@ -49,7 +50,7 @@ impl<'a> Estimator<'a>
                 total = total + elapsed;
             }
 
-            let millis = rand::thread_rng().gen_range(100..901);
+            let millis = rand::thread_rng().gen_range(100..=900);
             thread::sleep(Duration::from_millis(millis));
         }
 
