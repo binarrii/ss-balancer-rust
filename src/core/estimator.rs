@@ -55,8 +55,8 @@ impl<'a> Estimator<'a>
         }
 
         let x = total / ((ROUNDS * CONFIG.test_uris.len()) as u128);
+        let y = (self.proxy_server.get_latency() * 3 + x * 7) / 10;
 
-        let latency = self.proxy_server.latency_guard();
-        latency.set((latency.get() * 3 + x * 7) / 10)
+        self.proxy_server.set_latency(y)
     }
 }

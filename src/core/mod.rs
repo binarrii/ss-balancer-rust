@@ -1,7 +1,7 @@
 use std::cell::Cell;
-use std::sync::{Mutex, MutexGuard};
+use std::sync::Mutex;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub mod estimator;
 pub mod config;
@@ -18,7 +18,6 @@ pub struct ProxyServer {
 }
 
 impl ProxyServer {
-
     pub fn format(&self) -> String {
         format!("{}://{}:{}", self.scheme, self.host, self.port)
     }
@@ -27,10 +26,13 @@ impl ProxyServer {
         self.latency.lock().unwrap().get()
     }
 
-    pub fn latency_guard(&self) -> MutexGuard<Cell<u128>> {
-        self.latency.lock().unwrap()
+    pub fn set_latency(&self, value: u128) {
+        self.latency.lock().unwrap().set(value)
     }
 
+    // pub fn latency_guard(&self) -> MutexGuard<Cell<u128>> {
+    //     self.latency.lock().unwrap()
+    // }
 }
 
 impl Default for ProxyServer {
