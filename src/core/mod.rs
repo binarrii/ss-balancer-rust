@@ -29,10 +29,6 @@ impl ProxyServer {
     pub fn set_latency(&self, value: u128) {
         self.latency.lock().unwrap().set(value)
     }
-
-    // pub fn latency_guard(&self) -> MutexGuard<Cell<u128>> {
-    //     self.latency.lock().unwrap()
-    // }
 }
 
 impl Default for ProxyServer {
