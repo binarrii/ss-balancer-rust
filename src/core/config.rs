@@ -9,4 +9,5 @@ pub struct Config {
     pub port: i32,
     pub proxies: Vec<ProxyServer>,
     pub test_uris: Vec<String>,
+    pub tolerance: Option<u128>,
 }
