@@ -10,16 +10,17 @@ const ROUNDS: usize = 5;
 
 #[derive(Clone)]
 pub struct Estimator<'a> {
-    pub proxy_server: &'a ProxyServer
+    pub proxy_server: &'a ProxyServer,
 }
 
 impl<'a> Estimator<'a>
-    where 'a: 'static
+where
+    'a: 'static,
 {
     pub fn start(self) {
         thread::spawn(move || loop {
             self.clone().estimate();
-            let secs = rand::thread_rng().gen_range(5..=30);
+            let secs = rand::thread_rng().gen_range(10..=50);
             thread::sleep(Duration::from_secs(secs));
         });
     }
@@ -39,7 +40,7 @@ impl<'a> Estimator<'a>
 
         let mut total: u128 = 0;
 
-        for _ in 1..ROUNDS {
+        for _ in 0..ROUNDS {
             for uri in CONFIG.test_uris.iter() {
                 let now = Instant::now();
                 let result = client.head(uri).send();
