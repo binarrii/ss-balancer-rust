@@ -68,9 +68,9 @@ fn select() -> Vec<&'static ProxyServer> {
     }
 
     let i = COUNTER.fetch_add(1, Ordering::SeqCst);
-    let s = serde_json::to_string(&vec![result]).unwrap();
+    let s = serde_json::to_string(result).unwrap();
 
     println!("{} >> {}", i, s);
 
-    selection
+    vec![result]
 }
