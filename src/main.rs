@@ -38,9 +38,9 @@ async fn main() -> std::io::Result<()> {
             .wrap(middleware::Logger::default())
             .route("/", web::get().to(|| HttpResponse::Ok().json(select())))
     })
-        .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
-        .run()
-        .await
+    .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
+    .run()
+    .await
 }
 
 fn select() -> Vec<&'static ProxyServer> {
