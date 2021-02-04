@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["dupp <dupp@wasu.com>"]
 edition = "2018"
 
+[[bin]]
+name = "ss-balancer"
+path = "src/main.rs"
+
 [dependencies]
 reqwest = { version = "0.11", features = ["blocking", "socks"] }
 lazy_static = "1.4.0"

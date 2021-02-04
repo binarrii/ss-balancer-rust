@@ -5,6 +5,7 @@ extern crate serde_json;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use actix_web::{App, HttpResponse, HttpServer, middleware, web};
+use rand::Rng;
 
 use crate::core::config::Config;
 use crate::core::estimator::Estimator;
@@ -54,8 +55,24 @@ fn select() -> Vec<&'static ProxyServer> {
         .filter(|x| x.get_latency() - min <= CONFIG.tolerance.unwrap_or(200))
         .collect::<Vec<_>>();
 
+    let mut partitions = vec![0];
+    for (pos, x) in selection.iter().enumerate() {
+        partitions.push(partitions[pos] + x.weight)
+    }
+
+    let weight_total = selection.iter().map(|x| x.weight).sum();
+    let rand = rand::thread_rng().gen_range(0..weight_total);
+
+    let mut result = selection[0];
+    for x in 1..partitions.len() {
+        if rand < partitions[x] {
+            result = selection[x];
+            break;
+        }
+    }
+
     let i = COUNTER.fetch_add(1, Ordering::SeqCst);
-    let s = serde_json::to_string(&selection).unwrap();
+    let s = serde_json::to_string(&vec![result]).unwrap();
 
     println!("{} >> {}", i, s);
 

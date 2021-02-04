@@ -12,6 +12,8 @@ pub struct ProxyServer {
     pub name: String,
     pub host: String,
     pub port: i32,
+    #[serde(skip_serializing)]
+    pub weight: usize,
     #[serde(skip_deserializing)]
     pub latency: Mutex<u128>,
 }
@@ -37,6 +39,7 @@ impl Default for ProxyServer {
             name: String::from("localhost"),
             host: String::from("127.0.0.1"),
             port: 1080,
+            weight: 10,
             latency: Mutex::new(0),
         }
     }
@@ -49,6 +52,7 @@ impl Clone for ProxyServer {
             name: self.name.clone(),
             host: self.host.clone(),
             port: self.port.clone(),
+            weight: self.weight.clone(),
             ..Default::default()
         }
     }
