@@ -17,9 +17,9 @@ lazy_static! {
     static ref COUNTER: AtomicU64 = AtomicU64::new(1_0000_0001);
     static ref CONFIG: Config = {
         let data = std::fs::read_to_string("config.json")
-            .expect("Config file not found");
+                .expect("Config file not found");
         let conf: Config = serde_json::from_str(data.as_str())
-            .expect("Can not parse config file");
+                .expect("Can not parse config file");
         conf
     };
 }
@@ -36,20 +36,16 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
-            .route("/", web::get().to(|| {
-                HttpResponse::Ok().json(select())
-            }))
+            .route("/", web::get().to(|| HttpResponse::Ok().json(select())))
     })
-    .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
-    .run()
-    .await
+        .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
+        .run()
+        .await
 }
 
 fn select() -> Vec<&'static ProxyServer> {
     let min = CONFIG.proxies.iter()
-        .map(|x| x.get_latency())
-        .min()
-        .unwrap_or(0);
+        .map(|x| x.get_latency()).min().unwrap_or(0);
 
     let selection = CONFIG.proxies.iter()
         .filter(|x| x.get_latency() - min <= CONFIG.tolerance.unwrap_or(200))
@@ -66,7 +62,7 @@ fn select() -> Vec<&'static ProxyServer> {
     let mut result = selection[0];
     for x in 1..partitions.len() {
         if rand < partitions[x] {
-            result = selection[x];
+            result = selection[x - 1];
             break;
         }
     }
