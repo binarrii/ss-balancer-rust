@@ -36,7 +36,9 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .wrap(middleware::Logger::default())
-            .route("/", web::get().to(|| HttpResponse::Ok().json(select())))
+            .route("/", web::get().to(|| {
+                HttpResponse::Ok().json(select())
+            }))
     })
     .bind(format!("{}:{}", CONFIG.address, CONFIG.port))?
     .run()
@@ -50,7 +52,10 @@ fn select() -> Vec<&'static ProxyServer> {
     let tolerance = CONFIG.tolerance.unwrap_or(200);
     let selection = CONFIG.proxies.iter()
         .filter(|x| x.get_latency() - min <= tolerance)
+        .filter(|x| x.weight > 0)
         .collect::<Vec<_>>();
+
+    if selection.is_empty() { return selection; }
 
     let mut partitions = vec![0];
     for (pos, x) in selection.iter().enumerate() {
