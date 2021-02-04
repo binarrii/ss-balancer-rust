@@ -47,8 +47,9 @@ fn select() -> Vec<&'static ProxyServer> {
     let min = CONFIG.proxies.iter()
         .map(|x| x.get_latency()).min().unwrap_or(0);
 
+    let tolerance = CONFIG.tolerance.unwrap_or(200);
     let selection = CONFIG.proxies.iter()
-        .filter(|x| x.get_latency() - min <= CONFIG.tolerance.unwrap_or(200))
+        .filter(|x| x.get_latency() - min <= tolerance)
         .collect::<Vec<_>>();
 
     let mut partitions = vec![0];
